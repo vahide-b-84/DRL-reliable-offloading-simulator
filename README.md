@@ -4,9 +4,10 @@ This repository provides a **generic and modular simulator** for reliability-awa
 task offloading in **distributed Edge/Cloud computing systems**.
 The simulator supports pluggable Deep Reinforcement Learning (DRL) agents
 (e.g., **DQN**, **PPO**, **DDPG**) and is not tied to any specific application domain
-such as vehicular or RSU-based systems.
+(e.g., vehicular or RSU-based systems).
 
-All input Excel files are stored in `data/`, and all experiment outputs are written to `results`.
+All input Excel files are generated automatically, and all experiment outputs are
+written to a dedicated results directory.
 
 ---
 
@@ -15,11 +16,17 @@ All input Excel files are stored in `data/`, and all experiment outputs are writ
 - `Project_main.py`  
   Main entry point for running the simulator.
 
+- `pre_process.py`  
+  Standalone launcher for generating input Excel files.
+
+- `post_process.py`  
+  Standalone launcher for post-processing and aggregating results.
+
 - `config/`  
   Experiment configuration and centralized paths:
   - `configuration.py` – scenario type, failure state, agent selection, hyperparameters  
   - `params.py` – unified parameter object  
-  - `paths.py` – single source of truth for project paths (root, `data`, `results`)
+  - `paths.py` – single source of truth for project paths (project root, `data`, `results`)
 
 - `core/`  
   Simulation core (environment, state representation, episode loop, tasks, servers).
@@ -34,10 +41,28 @@ All input Excel files are stored in `data/`, and all experiment outputs are writ
   Result logging and post-processing utilities.
 
 - `data/`  
-  Input Excel files (server and task parameters).
+  Input Excel files generated during the pre-processing step.
 
 - `results/`  
-  Output Excel files generated per scenario, state, and model.
+  Output Excel files generated per scenario, failure state, and model.
+
+---
+
+## Requirements and environment setup
+
+### Python version
+- Python **3.9** or **3.10** is recommended.
+
+### Required libraries
+All required Python dependencies are listed in `requirements.txt`.
+
+Install dependencies using:
+
+```bash
+pip install -r requirements.txt
+```
+
+It is recommended to use a virtual environment before installing dependencies.
 
 ---
 
@@ -45,7 +70,7 @@ All input Excel files are stored in `data/`, and all experiment outputs are writ
 
 ### 1) Pre-process (generate input Excel files)
 
-Run this step **only if** the input Excel files are missing or need to be regenerated:
+Run this step **only if** input Excel files do not exist or need to be regenerated:
 
 ```bash
 python pre_process.py
@@ -75,8 +100,8 @@ results/<scenario>_<state>_results/<model>_<scenario>_<state>.xlsx
 python post_process.py
 ```
 
-This step augments the result workbooks with additional analysis sheets and generates
-a global aggregated file (e.g., `Final_Result_All.xlsx`) inside the `results` directory.
+This step augments result workbooks with additional analysis sheets and may generate
+a global aggregated file (e.g., `Final_Result_All.xlsx`) inside the `results/` directory.
 
 ---
 
@@ -93,15 +118,13 @@ Key parameters include:
 
 - `SCENARIO_TYPE = "homogeneous" | "heterogeneous"`  
   Specifies how failure probabilities are distributed across computing nodes.
-  In the homogeneous case, nodes share similar failure ranges, while in the
-  heterogeneous case, failure characteristics vary across nodes.
 
 - `FAILURE_STATE = "low" | "med" | "high"`  
-  Defines the base reliability level of the system. This parameter directly
-  affects the failure-rate values loaded from the input Excel files.
+  Defines the base reliability level of the system and directly affects the
+  failure-rate values loaded from the input Excel files.
 
 By modifying these parameters, different experimental scenarios can be executed
-without any changes to the simulation core or agent implementations.
+without any changes to the simulation core.
 
 ---
 
@@ -110,13 +133,13 @@ without any changes to the simulation core or agent implementations.
 The simulation core depends only on a **minimal agent interface**, which ensures
 that learning algorithms can be replaced without modifying the environment logic.
 
-- **Discrete-action agents (DQN / PPO):**  
-  ```
+- **Discrete-action agents (DQN / PPO):**
+  ```text
   select_action(state) -> int
   ```
 
-- **Continuous scoring agents (DDPG):**  
-  ```
+- **Continuous scoring agents (DDPG):**
+  ```text
   policy(state) -> score_vector
   ```
 
@@ -127,13 +150,13 @@ simulation core.
 
 ## Adding a new DRL agent
 
-New DRL algorithms can be integrated in a low-risk and incremental manner:
+New DRL algorithms can be integrated in an incremental and low-risk manner:
 
 1. Create a new agent implementation inside the `agents/` directory
    (e.g., `agents/a2c_agent.py`).
 
 2. Implement the required action-selection interface expected by the simulation core
-   (either `select_action` or `policy`, depending on the action space).
+   (`select_action` or `policy`, depending on the action space).
 
 3. Register the new agent in the model construction logic
    (e.g., within `build_model()` in `Project_main.py`).
@@ -148,7 +171,7 @@ simulation environment or episode loop.
 ## Notes
 
 - All scripts should be executed from the **project root**.
-- Root-level launcher scripts (`pre_process.py`, `post_process.py`) are provided to
-  avoid Python import issues when running utility modules.
-- Input data and results are strictly separated into `data` and `results` to ensure
-  reproducibility and clean experiment management.
+- Input data (`data/`) and experiment outputs (`results/`) are generated automatically
+  and are not expected to be present in the repository.
+- Root-level launcher scripts are provided to avoid Python import issues when running
+  utility modules.
