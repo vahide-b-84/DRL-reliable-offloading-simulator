@@ -84,7 +84,7 @@ class MainLoop:
         eps_start = getattr(params, "epsilon_start_dqn", 1.0)
         eps_end = getattr(params, "epsilon_end_dqn", 0.01)
         eps_decay = getattr(params, "epsilon_decay_dqn", 300)
-        # linear decay (مثل پروژه RSU)
+        # linear decay 
         return max(eps_end, eps_start - (episode / float(eps_decay)))
 
     # ---------------------------
@@ -272,7 +272,7 @@ class MainLoop:
             self.env_state.remove_task(t)
 
     # ---------------------------
-    # SERVERS (updated excel format: scenario sheet by state, no failure_model)
+    # SERVERS 
     # ---------------------------
     def setServers(self):
         excel_file = "homogeneous_server_info.xlsx" if self.SCENARIO_TYPE == "homogeneous" else "heterogeneous_server_info.xlsx"
@@ -307,7 +307,7 @@ class MainLoop:
         return self.extract_parameters_from_index(max_index)
 
     # ---------------------------
-    # ACTION INDEX LIST (same as before)
+    # ACTION INDEX LIST 
     # ---------------------------
     @staticmethod
     def generate_combinations():

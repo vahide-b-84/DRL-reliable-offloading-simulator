@@ -1,8 +1,6 @@
 
 """core.env_state
-
 Environment state container.
-Only change here: updated imports for new folder structure.
 """
 
 import numpy as np
@@ -12,7 +10,6 @@ class EnvironmentState:
     def __init__(self):
         self.servers = {}  # Dictionary to store server objects {server_id: server_object, 'failure_rate': failure_rate, 'load': load}
         self.tasks = {}  # Dictionary to store generated task objects {task_id: task_object}
-        
         self.num_completed_tasks = 0  # Number of completed tasks at all servers
 
     def add_server_and_init_environment(self, server_object):
@@ -28,7 +25,6 @@ class EnvironmentState:
             'backup_executed_time': 1000000,  # Initialize executed tasks time for the server if it is selected as backup
             'load': 0  # Initialize load for the server (sum of computation demands of tasks assigned to it)
         }
-
 
     def assign_task_to_server(self, server_id, task, selection):
         """Assign a task object to a server based on the selection (primary or backup)."""
@@ -111,7 +107,6 @@ class EnvironmentState:
 
     def normalize(self, val, min_val, max_val):
         return (val - min_val) / (max_val - min_val + 1e-8)
-
 
     def get_state(self, task):
         primary_failure_rate = []
