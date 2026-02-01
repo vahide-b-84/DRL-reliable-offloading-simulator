@@ -6,8 +6,8 @@ class parameters:
     # experiment setting
     # ======================================================================
     SCENARIO_TYPE = "heterogeneous"  # Options: "homogeneous", "heterogeneous"
-    FAILURE_STATE = "high"  # Options: "low", "med", "high"
-    model_summary = "ddpg" # Options: "dqn", "ppo","ddpg"  
+    FAILURE_STATE = "low"  # Options: "low", "med", "high"
+    model_summary = "ppo" # Options: "dqn", "ppo","ddpg"  
     total_episodes = 5  # 100
 
     # ======================================================================
@@ -21,8 +21,9 @@ class parameters:
     # ======================================================================
     TASK_ARRIVAL_RATE = 0.5 # Task arrival time, 0.1, 0.2
     TASK_SIZE_RANGE = (10, 100)  # heter
-    Low_demand, High_demand = 1, 100 # MIPS (Normal(mean=50, std=16) implied)
+    Low_demand, High_demand = 1, 100 # MI (Normal(mean=50, std=16) implied)
     taskno = 200
+    deadline =()
     # ======================================================================
     # Network model
     # ======================================================================
@@ -34,7 +35,7 @@ class parameters:
     # ======================================================================
     # Edge reliability: base failure probability for each state (low/med/high).
     # These are interpreted as failure-probability percentiles used later to derive failure rates.
-    INITIAL_FAILURE_PROB_LOW_EDGE = 0.0001
+    INITIAL_FAILURE_PROB_LOW_EDGE = 0.0001 # 0.0
     INITIAL_FAILURE_PROB_HIGH_EDGE = 0.79
     INITIAL_FAILURE_PROB_MED_EDGE = 0.55
 
@@ -42,7 +43,7 @@ class parameters:
     # - homogeneous   : smaller spread across nodes
     # - heterogeneous : larger spread across nodes
     HOMOGENEOUS_INTERVAL_EDGE = 0.10
-    HETEROGENEOUS_INTERVAL_EDGE = 0.20
+    HETEROGENEOUS_INTERVAL_EDGE = 0.20 # 0.0
     # Edge processing capacity range (MIPS).
     EDGE_PROCESSING_FREQ_RANGE = (10, 15)  # MIPS
     # Cloud reliability: base failure probabilities (typically much lower than edge).
