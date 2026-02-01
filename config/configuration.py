@@ -244,24 +244,3 @@ class parameters:
 
         return {"edge": compute_all("edge"), "cloud": compute_all("cloud")}
 
-        """
-        Compute alpha parameters used by your simulator (typically for time-varying failure or hazard models).
-
-        For each failure-rate interval (r0, r1), alpha is computed as:
-            alpha_0 = (r1 - r0) / taskno
-            alpha_1 = r1
-
-        Output format mirrors compute_failure_rates().
-        """
-        failure_rates = parameters.compute_failure_rates()
-
-        def calc_alpha(rate_interval):
-            return ((rate_interval[1] - rate_interval[0]) / parameters.taskno, rate_interval[1])
-
-        def compute_all(rtype):
-            return {
-                "homogeneous": {k: calc_alpha(v) for k, v in failure_rates[rtype]["homogeneous"].items()},
-                "heterogeneous": {k: calc_alpha(v) for k, v in failure_rates[rtype]["heterogeneous"].items()},
-            }
-
-        return {"edge": compute_all("edge"), "cloud": compute_all("cloud")}
