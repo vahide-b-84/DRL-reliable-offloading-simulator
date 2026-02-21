@@ -23,7 +23,7 @@ class parameters:
     TASK_SIZE_RANGE = (10, 100)  # heter
     Low_demand, High_demand = 1, 100 # MI (Normal(mean=50, std=16) implied)
     taskno = 200
-    deadline =()
+    
     # ======================================================================
     # Network model
     # ======================================================================
